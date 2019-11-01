@@ -107,7 +107,7 @@ function block(state, startLine, endLine, silent) {
 
 module.exports = function function_plot(md, options) {
     var blockRenderer = function(tokens, idx){
-        fpJs = tokens[idx].content;
+        let fpJs = tokens[idx].content;
         let id = uuid();
         let options = {};                 
         try{
