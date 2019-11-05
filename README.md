@@ -2,7 +2,15 @@
 
 # Usage:
 
-\`\`\`fp  
+\`\`\` fp  
+{  
+  data: [{  
+    fn: 'x^2'  
+  }]  
+}  
+\`\`\`  
+
+\`\`\` function-plot   
 {  
   data: [{  
     fn: 'x^2'  
