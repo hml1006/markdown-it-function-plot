@@ -1,8 +1,5 @@
 "use strict";
 
-let open = '```fp'
-let close = '```'
-
 let _uuidCounter = 0;
 function uuid() {
     let id = _uuidCounter++;
@@ -10,33 +7,27 @@ function uuid() {
 };
 
 function block(state, startLine, endLine, silent) {
-    var openDelim, len, params, nextLine, token, firstLine, lastLine, lastLinePos,
+    var len, params, nextLine, token, firstLine, lastLine, lastLinePos,
         haveEndMarker = false,
         pos = state.bMarks[startLine] + state.tShift[startLine],
         max = state.eMarks[startLine];
 
-    if (pos + open.length > max) {
+    let tag1 = 'fp';
+    let tag2 = 'function-plot';
+    let close = '```';
+
+    // open tag line
+    var delimLine = state.src.slice(pos, max).trim()
+    var delimLineStrs = delimLine.split(/\s+/)
+    if (delimLineStrs == null || delimLineStrs.length != 2) {
+        return false;
+    }
+    if (close != delimLineStrs[0]) {
         return false;
     }
 
-    openDelim = state.src.slice(pos, pos + open.length);
-
-    if (openDelim !== open) {
+    if (tag1 != delimLineStrs[1] && tag2 != delimLineStrs[1]) {
         return false;
-    }
-
-    pos += open.length;
-    firstLine = state.src.slice(pos, max);
-
-    // Since start is found, we can report success here in validation mode
-    if (silent) {
-        return true;
-    }
-
-    if (firstLine.trim().slice(-close.length) === close) {
-        // Single line expression
-        firstLine = firstLine.trim().slice(0, -close.length);
-        haveEndMarker = true;
     }
 
     // search end of block
@@ -100,7 +91,7 @@ function block(state, startLine, endLine, silent) {
         (lastLine && lastLine.trim() ? lastLine : '');
     token.info = params;
     token.map = [startLine, state.line];
-    token.markup = open;
+    token.markup = delimLine;
 
     return true;
 }
